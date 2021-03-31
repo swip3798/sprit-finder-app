@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, fade, makeStyles, CssBaseline, Container, Fab, Select, MenuItem, FormControl, FormHelperText, IconButton } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, fade, makeStyles, CssBaseline, Container, Fab, Select, MenuItem, FormControl, FormHelperText, IconButton, Snackbar, Backdrop, CircularProgress } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu'
 import GpsFixedIcon from '@material-ui/icons/GpsFixed';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import TankMap from './map/TankMap';
 import Api from './apis/tankerkoenig/Api';
 import SearchBar from './search/Searchbar';
@@ -11,6 +12,7 @@ import FullscreenDialog from './dialogs/FullscreenDialog';
 import ThirdPartyLibrary from './dialogs/ThirdPartyLibrary';
 import Imprint from './dialogs/Imprint';
 import PrivacyNotice from './dialogs/PrivacyNotice';
+import CloseIcon from '@material-ui/icons/Close';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -54,6 +56,11 @@ const useStyles = makeStyles((theme) => ({
         bottom: theme.spacing(2),
         right: theme.spacing(2),
     },
+    refreshFab: {
+        position: 'fixed',
+        top: theme.spacing(9),
+        right: theme.spacing(7),
+    },
     versionText: {
         position: 'fixed',
         bottom: theme.spacing(0),
@@ -69,7 +76,11 @@ const useStyles = makeStyles((theme) => ({
     link: {
         paddingRight: '5px',
         paddingLeft: '5px',
-    }
+    },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
+    },
 }));
 
 export default function App(props) {
@@ -84,6 +95,9 @@ export default function App(props) {
     const [tpOpen, setTpOpen] = useState(false);
     const [ipOpen, setIpOpen] = useState(false);
     const [prOpen, setPrOpen] = useState(false);
+    const [notification, setNotification] = useState(false);
+    const [notificationMess, setNotificationMess] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const tankApi = new Api(props.apiKey);
     const placeApi = new PlaceApi();
@@ -99,14 +113,43 @@ export default function App(props) {
         map._setViewWasCalled = true;
         map.setView(location, 13);
         setIsLocated(true);
-        tankApi.searchByLocation(location[0], location[1], 10, callbackStations)
+        tankApi.searchByLocation(location[0], location[1], 10, callbackStations);
     }
     const resolveGeolocation = (location) => {
+        setLoading(false);
         setNewCenter([location.coords.latitude, location.coords.longitude]);
     }
 
+    const refreshTankData = () => {
+        if (isLocated) {
+            tankApi.searchByLocation(center[0], center[1], 10, callbackStations);
+        }
+    }
+
+    const handleGeolocationError = (geolocationError) => {
+        console.log(geolocationError.message);
+        setLoading(false);
+        switch (geolocationError.code) {
+            case 1:
+                setNotificationMess("Keine Berechtigung für den Standort");
+                setNotification(true);
+                break;
+            case 2:
+                setNotificationMess("Standort konnte nicht ermittelt werden");
+                setNotification(true);
+                break;
+            case 3:
+                setLoading(true);
+                navigator.geolocation.getCurrentPosition(resolveGeolocation, handleGeolocationError);
+                break;
+            default:
+                break;
+        }
+    }
+
     const requestLocation = () => {
-        navigator.geolocation.getCurrentPosition(resolveGeolocation);
+        setLoading(true);
+        navigator.geolocation.getCurrentPosition(resolveGeolocation, handleGeolocationError, { enableHighAccuracy: true, timeout: 5000 });
     }
     const handlePlaceSelected = (place) => {
         setNewCenter([place.lat, place.lng]);
@@ -127,7 +170,7 @@ export default function App(props) {
     const openMenu = () => {
         setMenuOpened(true);
     }
-    
+
     const handleMenuClose = (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
             return;
@@ -159,6 +202,14 @@ export default function App(props) {
         setPrOpen(true);
     }
 
+    const handleNotification = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setNotification(false);
+    }
+
     return (
         <React.Fragment>
             <CssBaseline />
@@ -174,13 +225,38 @@ export default function App(props) {
                         <SearchBar onPlaceSelected={handlePlaceSelected} />
                     </Toolbar>
                 </AppBar>
-                <FullscreenDialog open={tpOpen} onClose={handleTpClose} ContentComponent={ThirdPartyLibrary} title="Open-Source-Bibliotheken"/>
-                <FullscreenDialog open={ipOpen} onClose={handleIpClose} ContentComponent={Imprint} title="Impressum"/>
-                <FullscreenDialog open={prOpen} onClose={handlePrClose} ContentComponent={PrivacyNotice} title="Datenschutzerklärung"/>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={notification}
+                    autoHideDuration={6000}
+                    onClose={handleNotification}
+                    message={notificationMess}
+                    action={
+                        <React.Fragment>
+                            <IconButton size="small" aria-label="close" color="inherit" onClick={handleNotification}>
+                                <CloseIcon fontSize="small" />
+                            </IconButton>
+                        </React.Fragment>
+                    }
+                />
+                <Backdrop className={classes.backdrop} open={loading} >
+                    <CircularProgress color="inherit" />
+                </Backdrop>
+                <FullscreenDialog open={tpOpen} onClose={handleTpClose} ContentComponent={ThirdPartyLibrary} title="Open-Source-Bibliotheken" />
+                <FullscreenDialog open={ipOpen} onClose={handleIpClose} ContentComponent={Imprint} title="Impressum" />
+                <FullscreenDialog open={prOpen} onClose={handlePrClose} ContentComponent={PrivacyNotice} title="Datenschutzerklärung" />
                 <TankMap center={center} whenCreated={handleMapCreate} stations={stations} onPositionChanged={handlePositionChange} mainFuelType={mainFuelType} isLocated={isLocated} />
                 <Fab color="secondary" aria-label="Lokalisieren" onClick={requestLocation} className={classes.fab}>
                     <GpsFixedIcon />
                 </Fab>
+                {isLocated &&
+                    <Fab color="primary" aria-label="Aktualisieren" onClick={refreshTankData} className={classes.refreshFab}>
+                        <RefreshIcon />
+                    </Fab>
+                }
                 <FormControl className={classes.selectForm}>
                     <Select
                         labelId="demo-simple-select-label"
@@ -198,7 +274,7 @@ export default function App(props) {
                 <div className={classes.versionText}>
                     Version: v{props.version}
                 </div>
-                <Sidebar opened={menuOpened} onClose={handleMenuClose} tankApi={tankApi} placeApi={placeApi} onTpOpen={handleTpOpen} onIpOpen={handleIpOpen} onPrOpen={handlePrOpen}/>
+                <Sidebar opened={menuOpened} onClose={handleMenuClose} tankApi={tankApi} placeApi={placeApi} onTpOpen={handleTpOpen} onIpOpen={handleIpOpen} onPrOpen={handlePrOpen} />
             </Container>
         </React.Fragment>
     );

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Marker, Popup, Tooltip } from 'react-leaflet';
-import { Button, Table, TableBody, TableCell, TableContainer, TableRow, makeStyles, Icon } from '@material-ui/core';
+import { Button, Table, TableBody, TableCell, TableContainer, TableRow, makeStyles, Icon, Typography } from '@material-ui/core';
 import { iconNormal } from '../img/Icons';
 import GoogleMapsLink from '../apis/mapslinks/MapLinkCreator';
 
@@ -8,6 +8,12 @@ const useStyles = makeStyles((theme) => ({
     button: {
         marginTop: theme.spacing(1),
         color: theme.palette.common.white + "!important",
+        width: "100%"
+    },
+    credit: {
+        fontSize: "0.9em",
+        fontStyle: "italic",
+        marginTop: theme.spacing(1)
     }
 }))
 
@@ -31,7 +37,7 @@ export default function StationMarker(props) {
 
     return (
         <Marker position={[props.station.lat, props.station.lng]} key={props.station.id} icon={iconNormal} >
-            <Popup>
+            <Popup className={classes.popup}>
                 <TableContainer>
                     <Table aria-label="simple table" size="small" >
                         <TableBody>
@@ -78,6 +84,7 @@ export default function StationMarker(props) {
                 >
                     In Google Maps öffnen
                 </Button>
+                <Typography component="div" className={classes.credit}>Daten bereitgestellt durch <a href="https://creativecommons.tankerkoenig.de/" target="_blank" rel="noopener noreferrer">creativecommons.tankerkoenig.de</a></Typography>
             </Popup>
             <Tooltip direction="bottom" offset={[-15, 23]} opacity={1} permanent>
                 {mainFuelPriceTag}€

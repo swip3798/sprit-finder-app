@@ -29,7 +29,7 @@ export default function Sidebar({ opened, onClose, tankApi, placeApi, onTpOpen, 
                     <ListItemText primary="SpritFinder" />
                 </ListItem>
                 <Divider />
-                <ListItem button component="a" href="https://github.com/swip3798/sprit-finder" target="_blank" rel="noopener noreferrer">
+                <ListItem button component="a" href="https://github.com/swip3798/sprit-finder-app" target="_blank" rel="noopener noreferrer">
                     <ListItemIcon>
                         <GitHubIcon />
                     </ListItemIcon>
