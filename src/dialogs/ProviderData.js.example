@@ -1,0 +1,9 @@
+const ProviderData = {
+    fullName: "",
+    street: "",
+    zipCodeCity: "",
+    email: "",
+    phoneNumber: ""
+}
+
+export default ProviderData;

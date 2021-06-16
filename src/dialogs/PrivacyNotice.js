@@ -1,6 +1,7 @@
 import React, { } from 'react';
 import { makeStyles, Typography } from '@material-ui/core';
 import "./PrivacyNotice.css";
+import ProviderData from './ProviderData';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,21 +28,33 @@ const useStyles = makeStyles((theme) => ({
         fontSize: theme.typography.pxToRem(32),
         fontWeight: theme.typography.fontWeightBold,
         marginBottom: theme.spacing(1)
+    },
+    deleteLink: {
+        textDecoration: "underline"
     }
+
 }));
 
-export default function PrivacyNotice() {
+export default function PrivacyNotice({onLocalStorageClear}) {
     const classes = useStyles();
 
     return (
         <div className={classes.root}>
+            <Typography className={classes.title}>Hinweis</Typography>
+            <Typography className={classes.text}>
+                Spritfinder speichert die letzte Position der Karte auf der nach Spritpreisen gesucht wurde, um die Karte beim nächsten Aufruf der App auf diese Position einzustellen. Dafür verwendet es den <a href="https://www.w3schools.com/html/html5_webstorage.asp" rel="nofollow noopener noreferrer" target="_blank">HTML5 Local Storage</a>. Diese Information wird ausschließlich auf Ihrem Gerät gespeichert und nicht an uns oder Dritte übermittelt. Falls Sie dennoch den Speicher leeren möchten, <a href="/" className={classes.deleteLink} onClick={onLocalStorageClear}>können Sie hier klicken, um den Speicher zu leeren.</a>
+            </Typography>
             <Typography className={classes.title}>Datenschutzerklärung</Typography>
             <Typography className={classes.text}>
                 Verantwortlicher im Sinne der Datenschutzgesetze, insbesondere der EU-Datenschutzgrundverordnung (DSGVO), ist:<br />
                 <br />
+                {ProviderData.fullName}<br />
+                {ProviderData.street}<br />
+                {ProviderData.zipCodeCity}<br />
+                {ProviderData.email}
             </Typography>
             <Typography className={classes.heading1}>Ihre Betroffenenrechte</Typography>
-            <Typography className={classes.text}>
+            <Typography className={classes.text} component="div">
                 Unter den angegebenen Kontaktdaten unseres Datenschutzbeauftragten können Sie jederzeit folgende Rechte ausüben:
                 <ul>
                     <li>Auskunft über Ihre bei uns gespeicherten Daten und deren Verarbeitung (Art. 15 DSGVO),</li>
@@ -65,7 +78,7 @@ export default function PrivacyNotice() {
             </Typography>
             <Typography className={classes.heading1}>Erfassung allgemeiner Informationen beim Besuch unserer Website</Typography>
             <Typography className={classes.heading2}>Art und Zweck der Verarbeitung:</Typography>
-            <Typography className={classes.text}>
+            <Typography className={classes.text} component="div">
                 <p>Wenn Sie auf unsere Website zugreifen, d.h., wenn Sie sich nicht registrieren oder anderweitig Informationen übermitteln, werden automatisch Informationen allgemeiner Natur erfasst. Diese Informationen (Server-Logfiles) beinhalten etwa die Art des Webbrowsers, das verwendete Betriebssystem, den Domainnamen Ihres Internet-Service-Providers, Ihre IP-Adresse und ähnliches. </p>
                 <p>Sie werden insbesondere zu folgenden Zwecken verarbeitet:</p>
                 <ul>
@@ -81,24 +94,24 @@ export default function PrivacyNotice() {
                 </p>
             </Typography>
             <Typography className={classes.heading2}>Rechtsgrundlage und berechtigtes Interesse:</Typography>
-            <Typography className={classes.text}><p>Die Verarbeitung erfolgt gemäß Art. 6 Abs. 1 lit. f DSGVO auf Basis unseres berechtigten Interesses an der Verbesserung der Stabilität und Funktionalität unserer Website.</p></Typography>
+            <Typography className={classes.text} component="div"><p>Die Verarbeitung erfolgt gemäß Art. 6 Abs. 1 lit. f DSGVO auf Basis unseres berechtigten Interesses an der Verbesserung der Stabilität und Funktionalität unserer Website.</p></Typography>
             <Typography className={classes.heading2}>Empfänger:</Typography>
-            <Typography className={classes.text}><p>Empfänger der Daten sind ggf. technische Dienstleister, die für den Betrieb und die Wartung unserer Webseite als Auftragsverarbeiter tätig werden.</p></Typography>
+            <Typography className={classes.text} component="div"><p>Empfänger der Daten sind ggf. technische Dienstleister, die für den Betrieb und die Wartung unserer Webseite als Auftragsverarbeiter tätig werden.</p></Typography>
             <Typography className={classes.heading2}>Speicherdauer:</Typography>
-            <Typography className={classes.text}>
+            <Typography className={classes.text} component="div">
                 <p>
                     Die Daten werden gelöscht, sobald diese für den Zweck der Erhebung nicht mehr erforderlich sind. Dies ist für die Daten, die der Bereitstellung der Website dienen, grundsätzlich der Fall, wenn die jeweilige Sitzung beendet ist.
                 </p>
             </Typography>
             <Typography className={classes.heading2}>Bereitstellung vorgeschrieben oder erforderlich:</Typography>
-            <Typography className={classes.text}>
+            <Typography className={classes.text} component="div">
                 <p>
                     Die Bereitstellung der vorgenannten personenbezogenen Daten ist weder gesetzlich noch vertraglich vorgeschrieben. Ohne die IP-Adresse ist jedoch der Dienst und die Funktionsfähigkeit unserer Website nicht gewährleistet. Zudem können einzelne Dienste und Services nicht verfügbar oder eingeschränkt sein. Aus diesem Grund ist ein Widerspruch ausgeschlossen.
                 </p>
             </Typography>
             <Typography className={classes.heading1}>Verwendung von Scriptbibliotheken (Google Webfonts, OpenStreetMap, Tankerkönig, Photon)</Typography>
             <Typography className={classes.heading2}>Google Webfonts</Typography>
-            <Typography className={classes.text}>
+            <Typography className={classes.text} component="div">
                 <p>
                     Um unsere Inhalte browserübergreifend korrekt und grafisch ansprechend darzustellen, verwenden wir auf dieser Website „Google Web Fonts“ der Google LLC (1600 Amphitheatre Parkway, Mountain View, CA 94043, USA; nachfolgend „Google“) zur Darstellung von Schriften.
                 </p>
@@ -107,7 +120,7 @@ export default function PrivacyNotice() {
                 </p>
             </Typography>
             <Typography className={classes.heading2}>OpenStreetMap</Typography>
-            <Typography className={classes.text}>
+            <Typography className={classes.text} component="div">
                 <p>
                     Um die Karte auf unserer Seite zu betreiben verwenden wir "OpenStreetMap" der OpenStreetMap Foundation (OSMF).
                 </p>
@@ -116,7 +129,7 @@ export default function PrivacyNotice() {
                 </p>
             </Typography>
             <Typography className={classes.heading2}>Tankerkönig</Typography>
-            <Typography className={classes.text}>
+            <Typography className={classes.text} component="div">
                 <p>
                     Um aktuelle Preise von Tankstellen abzufragen, verwenden wir auf dieser Website die „Tankerkönig-API“ der Tankerkönig UG (Niederhöfen 5, 87484 Nesselwang).
                 </p>
@@ -125,7 +138,7 @@ export default function PrivacyNotice() {
                 </p>
             </Typography>
             <Typography className={classes.heading2}>Photon</Typography>
-            <Typography className={classes.text}>
+            <Typography className={classes.text} component="div">
                 <p>
                     Um die Suchleiste unsere Website zu betreiben, verwenden wir auf dieser Website die „Photon-API“ der komoot GmbH (Friedrich-Wilhelm-Boelcke-Straße 2, 14473 Potsdam, nachfolgend „kommot“).
                 </p>

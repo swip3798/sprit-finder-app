@@ -6,6 +6,7 @@ import GitHubIcon from '@material-ui/icons/GitHub';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import React, { } from 'react';
 import ApiStatus from './ApiStatus';
+import PredictApi from './apis/predict/PredictionApi';
 
 const useStyles = makeStyles({
     list: {
@@ -15,6 +16,8 @@ const useStyles = makeStyles({
         height: 64,
     }
 });
+
+const predictApi = new PredictApi();
 
 export default function Sidebar({ opened, onClose, tankApi, placeApi, onTpOpen, onIpOpen, onPrOpen }) {
     const classes = useStyles();
@@ -62,6 +65,7 @@ export default function Sidebar({ opened, onClose, tankApi, placeApi, onTpOpen, 
                 <Divider />
                 <ApiStatus name="Tankerkönig-API" api={tankApi} />
                 <ApiStatus name="Photon-API" api={placeApi} />
+                <ApiStatus name="Spritfinder-Vorhersage" api={predictApi} />
             </List>
 
         </Drawer>

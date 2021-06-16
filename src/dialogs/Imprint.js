@@ -1,5 +1,6 @@
 import React, { } from 'react';
 import { makeStyles, Typography } from '@material-ui/core';
+import ProviderData from './ProviderData';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -37,9 +38,14 @@ export default function Imprint() {
             <Typography className={classes.title}>Impressum</Typography>
             <Typography className={classes.heading1}>Angaben gemäß § 5 TMG</Typography>
             <Typography className={classes.text}>
+                {ProviderData.fullName}<br />
+                {ProviderData.street}<br />
+                {ProviderData.zipCodeCity}<br />
             </Typography>
             <Typography className={classes.heading1}>Kontakt</Typography>
             <Typography className={classes.text}>
+                Telefon: {ProviderData.phoneNumber}<br />
+                E-Mail: {ProviderData.email}<br />
             </Typography>
             <Typography className={classes.heading2}>Haftung für Inhalte</Typography>
             <Typography className={classes.text}>

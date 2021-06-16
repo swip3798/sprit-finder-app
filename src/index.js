@@ -8,7 +8,7 @@ import App from './App';
 // registrieren.
 const TANKERKOENIG_API_KEY = 'b8ad05f9-1fab-8472-8cb8-b0e9adf1f5f8';
 
-const VERSION = '1.1.4';
+const VERSION = '1.4.2';
 
 ReactDOM.render(
   <React.StrictMode>

@@ -16,7 +16,7 @@ export default function ApiStatus({ api, name }) {
             api.isApiReachable(handleVerify);
             setfirstTried(true);
         }
-    });
+    }, [api, firstTried]);
 
 
     return (

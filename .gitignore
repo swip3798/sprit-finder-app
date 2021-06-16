@@ -25,7 +25,4 @@ yarn-error.log*
 debug.log
 
 # privacy and imprint
-datenschutz.html
-impressum.html
-Imprint.js
-PrivacyNotice.js
+ProviderData.js
